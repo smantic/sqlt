@@ -5,35 +5,32 @@ import (
 	"log"
 	"os"
 	"os/signal"
-	"time"
 
 	"github.com/urfave/cli/v2"
 )
 
+// Version is the most recent tag for the repo.
+// Version is injected at build time.
+var Version string
+
 func main() {
 
-	ctx := context.Background()
-
-	ctx, _ = signal.NotifyContext(ctx)
+	ctx, _ := signal.NotifyContext(context.Background())
 
 	app := cli.App{
-		Name:                 "migrate",
-		HelpName:             "",
-		Usage:                "database migration tool",
-		UsageText:            "",
-		ArgsUsage:            "",
-		Version:              "0.1",
-		Description:          "",
-		DefaultCommand:       "",
-		Commands:             commands(),
-		Flags:                nil,
-		EnableBashCompletion: false,
-		HideHelp:             false,
-		HideHelpCommand:      false,
-		HideVersion:          true,
-		//Action:                 func(*cli.Context) error { panic("not implemented") },
-
-		Compiled:               time.Now(),
+		Name:                   "migrate",
+		Usage:                  "database migration tool",
+		UsageText:              "",
+		ArgsUsage:              "",
+		Version:                Version,
+		Description:            "",
+		DefaultCommand:         "",
+		Commands:               commands(),
+		Flags:                  nil,
+		EnableBashCompletion:   false,
+		HideHelp:               false,
+		HideHelpCommand:        false,
+		HideVersion:            true,
 		Authors:                []*cli.Author{{"tyler beverley", "tyler@smantic.dev"}},
 		Copyright:              "",
 		Metadata:               nil,

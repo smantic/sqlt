@@ -18,9 +18,8 @@ func UpAction(c *cli.Context) error {
 		dsn = getDSN(c)
 		ctx = c.Context
 	)
-	_ = dsn
 
-	return migrate.Up(ctx, nil)
+	return migrate.Up(ctx, dsn, nil)
 }
 func DownAction(c *cli.Context) error {
 	var (
@@ -28,7 +27,8 @@ func DownAction(c *cli.Context) error {
 		ctx = c.Context
 	)
 	_ = dsn
-	return migrate.Down(ctx, nil)
+
+	return migrate.Down(ctx)
 }
 func DropAction(c *cli.Context) error {
 	var (
@@ -44,7 +44,7 @@ func getDSN(c *cli.Context) string {
 	var dsn = c.String("dsn")
 
 	if dsn == "" {
-		args := c.Args().First()
+		dsn = c.Args().First()
 	}
 
 	return dsn
