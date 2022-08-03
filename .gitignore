@@ -1,0 +1,6 @@
+.DS_Store
+.coverage
+vendor/
+.vscode/
+.idea
+*.swp
