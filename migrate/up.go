@@ -3,7 +3,6 @@ package migrate
 import (
 	"context"
 	"database/sql"
-	"errors"
 	"fmt"
 	"io"
 )
@@ -21,14 +20,6 @@ func Up(ctx context.Context, dsn string, r io.Reader) error {
 	return UpWithDB(ctx, db, r)
 }
 
-func globalRollback(tx *sql.Tx) {
-	fmt.Printf("rolling back!!")
-	err := tx.Rollback()
-	if err != nil {
-		fmt.Printf("err rolling back: %s", err)
-	}
-}
-
 // UpWithDB is useful for when you want to provide the DB connection.
 func UpWithDB(ctx context.Context, db *sql.DB, r io.Reader) error {
 
@@ -37,7 +28,7 @@ func UpWithDB(ctx context.Context, db *sql.DB, r io.Reader) error {
 		return fmt.Errorf("failed to connect to the database: %w", err)
 	}
 
-	//globaltx use to rollback everything if we get sent an interrupt.
+	//use to rollback everything if we get sent an interrupt.
 	globaltx, err := db.BeginTx(ctx, nil)
 	if err != nil {
 		return fmt.Errorf("failed to begin transaction: %w", err)
@@ -46,8 +37,7 @@ func UpWithDB(ctx context.Context, db *sql.DB, r io.Reader) error {
 	done := make(chan struct{})
 	go func() {
 
-		err := errors.New("migrations")
-		// do migrations.
+		apply(ctx, db, r)
 		if err != nil {
 			globaltx.Rollback()
 		}
@@ -62,9 +52,18 @@ func UpWithDB(ctx context.Context, db *sql.DB, r io.Reader) error {
 	case <-done:
 		err := globaltx.Commit()
 		if err != nil {
-			return err
+			globalRollback(globaltx)
+			return fmt.Errorf("failed to commit transaction! %w", err)
 		}
 	}
 
 	return nil
+}
+
+func globalRollback(tx *sql.Tx) {
+	fmt.Printf("rolling back all changes!!")
+	err := tx.Rollback()
+	if err != nil {
+		fmt.Printf("err rolling back: %s", err)
+	}
 }
