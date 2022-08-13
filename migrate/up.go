@@ -10,12 +10,10 @@ import (
 // Up runs the up migrations.
 // pass in the sql to io.Reader
 func Up(ctx context.Context, dsn string, r io.Reader) error {
-
-	db, err := sql.Open("", dsn)
+	db, err := open("", dsn)
 	if err != nil {
-		return fmt.Errorf("failed to open the database: %w", err)
+		return err
 	}
-	defer db.Close()
 
 	return UpWithDB(ctx, db, r)
 }
@@ -50,6 +48,8 @@ func UpWithDB(ctx context.Context, db *sql.DB, r io.Reader) error {
 		globalRollback(globaltx)
 		return ctx.Err()
 	case <-done:
+		// migrations are done.
+
 		err := globaltx.Commit()
 		if err != nil {
 			globalRollback(globaltx)
