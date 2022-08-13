@@ -1,4 +1,4 @@
-package migrate
+package drivers
 
 // just to ensure we are always importing the drivers.
 import (

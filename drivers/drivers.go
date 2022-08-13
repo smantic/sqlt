@@ -1,4 +1,4 @@
-package migrate
+package drivers
 
 import (
 	"database/sql"

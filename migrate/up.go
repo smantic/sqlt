@@ -5,12 +5,17 @@ import (
 	"database/sql"
 	"fmt"
 	"io"
+
+	"github.com/smantic/sqlt/drivers"
 )
 
 // Up runs the up migrations.
-// pass in the sql to io.Reader
+// We read SQL from r and exectue statements in order.
+//
+// We expect the DSN to include the dirver as the scheme.
 func Up(ctx context.Context, dsn string, r io.Reader) error {
-	db, err := open("", dsn)
+
+	db, err := drivers.Open(dsn)
 	if err != nil {
 		return err
 	}
