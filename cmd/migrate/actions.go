@@ -1,51 +1,82 @@
 package main
 
 import (
+	"errors"
+	"fmt"
+	"strings"
+
 	"github.com/smantic/sqlt/migrate"
 	"github.com/urfave/cli/v2"
 )
 
-func CreateAction(c *cli.Context) error {
-	var (
-		dsn = getDSN(c)
+var (
+	MissingDriverScheme = errors.New(
+		"expected driver scheme to be presnt in the DSN. Use --driver or specify the driver in the DSN (driver://dsn)",
 	)
-	_ = dsn
-	return nil
-}
-func UpAction(c *cli.Context) error {
+	MissingDSN = errors.New("specify a DSN to connect to with --dsn")
+)
 
-	var (
-		dsn = getDSN(c)
-		ctx = c.Context
-	)
-
-	return migrate.Up(ctx, dsn, nil)
-}
-func DownAction(c *cli.Context) error {
-	var (
-		dsn = getDSN(c)
-		ctx = c.Context
-	)
-	_ = dsn
-
-	return migrate.Down(ctx)
-}
-func DropAction(c *cli.Context) error {
-	var (
-		dsn = getDSN(c)
-	)
-	_ = dsn
-
-	return nil
-}
-
-func getDSN(c *cli.Context) string {
+func validateDSN(c *cli.Context) error {
 
 	var dsn = c.String("dsn")
+	print(dsn)
 
 	if dsn == "" {
 		dsn = c.Args().First()
 	}
 
-	return dsn
+	if dsn == "" {
+		return MissingDSN
+	}
+
+	if driver := c.String("driver"); driver != "" {
+		if index := strings.Index(dsn, "://"); index == -1 {
+			dsn = fmt.Sprintf("%s://%s", driver, dsn)
+		} else {
+			// otherwise replace the existing driver scheme.
+			dsn = fmt.Sprintf("%s://%s", driver, dsn[index+2:])
+		}
+	}
+
+	if strings.Index(dsn, "://") == -1 {
+		return MissingDriverScheme
+	}
+
+	c.Set("dsn", dsn)
+	return nil
+}
+
+func CreateAction(c *cli.Context) error {
+	var (
+		dsn = c.String("dsn")
+	)
+	_ = dsn
+	return nil
+}
+
+func UpAction(c *cli.Context) error {
+
+	var (
+		dsn = c.String("dsn")
+		ctx = c.Context
+	)
+
+	return migrate.Up(ctx, dsn, nil)
+}
+
+func DownAction(c *cli.Context) error {
+	var (
+		dsn = c.String("dsn")
+		ctx = c.Context
+	)
+
+	return migrate.Down(ctx, dsn)
+}
+func DropAction(c *cli.Context) error {
+	var (
+		dsn = c.String("dsn")
+	)
+	_ = dsn
+
+	return nil
 }

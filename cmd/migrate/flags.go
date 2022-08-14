@@ -18,6 +18,17 @@ var (
 		EnvVars:     []string{"DSN"},
 		TakesFile:   false,
 	}
+	driverFlag = &cli.StringFlag{
+		Name:        "driver",
+		Category:    "",
+		DefaultText: "",
+		FilePath:    "",
+		Usage:       "specify the driver to use with the DSN (postgres, mysql ...)",
+		Required:    false,
+		Hidden:      false,
+		HasBeenSet:  false,
+		Value:       "",
+	}
 	sourceFlag = &cli.StringFlag{
 		Name:        "source",
 		Category:    "",

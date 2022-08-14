@@ -2,15 +2,14 @@ package main
 
 import (
 	"context"
-	"log"
+	"fmt"
 	"os"
 	"os/signal"
 
 	"github.com/urfave/cli/v2"
 )
 
-// Version is the most recent tag for the repo.
-// Version is injected at build time.
+// Version is the most recent tag for the repo. Injected by the build
 var Version string
 
 func main() {
@@ -25,7 +24,7 @@ func main() {
 		Version:                Version,
 		Description:            "",
 		DefaultCommand:         "",
-		Commands:               commands(),
+		Commands:               commands,
 		Flags:                  nil,
 		EnableBashCompletion:   false,
 		HideHelp:               false,
@@ -41,6 +40,6 @@ func main() {
 	}
 
 	if err := app.RunContext(ctx, os.Args); err != nil {
-		log.Fatal(err)
+		fmt.Println(err)
 	}
 }
