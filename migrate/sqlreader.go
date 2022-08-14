@@ -12,7 +12,7 @@ import (
 // I was thinking we might verify that the strings were valid sql queries.
 // But unsure if that is reasonable to do for all RDBMS.
 // e.g.  https://github.com/xwb1989/sqlparser
-func QueriesFrom(r io.Reader) ([]string, error) {
+func StatmentsFrom(r io.Reader) ([]string, error) {
 	read, err := io.ReadAll(r)
 	if err != nil {
 		return nil, err

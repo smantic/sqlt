@@ -42,7 +42,7 @@ func UpWithDB(ctx context.Context, db *sql.DB, r io.Reader) error {
 
 		apply(ctx, db, r)
 		if err != nil {
-			globaltx.Rollback()
+			globalRollback(globaltx)
 		}
 
 		close(done)
