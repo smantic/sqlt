@@ -15,8 +15,7 @@ func apply(ctx context.Context, db *sql.DB, r io.Reader) error {
 	}
 
 	for _, s := range statements {
-		result, err := db.ExecContext(ctx, s)
-		_ = result
+		_, err := db.ExecContext(ctx, s)
 		if err != nil {
 			return err
 		}
