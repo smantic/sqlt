@@ -14,9 +14,9 @@ const (
 // Open will take a DSN
 // we do a special thing and expect the user to provide the scheme on the DSN URL
 //
-//  scheme://u:pass@protocol(address)/dbname
+//	scheme://u:pass@protocol(address)/dbname
 //
-// even though this is not a standard expection accross drivers.
+// even though this is not a standard exception across drivers.
 // scheme is bare minimun that must be provided.
 func Open(dsn string) (*sql.DB, error) {
 

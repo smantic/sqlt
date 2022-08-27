@@ -19,7 +19,6 @@ var (
 func validateDSN(c *cli.Context) error {
 
 	var dsn = c.String("dsn")
-	print(dsn)
 
 	if dsn == "" {
 		dsn = c.Args().First()
@@ -30,7 +29,8 @@ func validateDSN(c *cli.Context) error {
 	}
 
 	if driver := c.String("driver"); driver != "" {
-		if index := strings.Index(dsn, "://"); index == -1 {
+		index := strings.Index(dsn, "://")
+		if index == -1 {
 			dsn = fmt.Sprintf("%s://%s", driver, dsn)
 		} else {
 			// otherwise replace the existing driver scheme.
@@ -38,12 +38,11 @@ func validateDSN(c *cli.Context) error {
 		}
 	}
 
-	if strings.Index(dsn, "://") == -1 {
+	if !strings.Contains(dsn, "://") {
 		return MissingDriverScheme
 	}
 
-	c.Set("dsn", dsn)
-	return nil
+	return c.Set("dsn", dsn)
 }
 
 func CreateAction(c *cli.Context) error {

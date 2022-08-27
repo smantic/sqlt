@@ -79,7 +79,6 @@ var commands []*cli.Command = []*cli.Command{
 	&cli.Command{
 		Name:                   "dump",
 		Usage:                  "Dump a schema.",
-		UsageText:              "migrate dump $DSN schema",
 		UsageText:              "migrate dump [optional flags] $DSN",
 		Description:            "",
 		ArgsUsage:              "",

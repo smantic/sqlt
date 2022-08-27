@@ -32,7 +32,7 @@ func UpWithDB(ctx context.Context, db *sql.DB, r io.Reader) error {
 	}
 
 	//use to rollback everything if we get sent an interrupt.
-	globaltx, err := db.BeginTx(ctx, nil)
+	gtx, err := db.BeginTx(ctx, nil)
 	if err != nil {
 		return fmt.Errorf("failed to begin transaction: %w", err)
 	}
@@ -40,9 +40,9 @@ func UpWithDB(ctx context.Context, db *sql.DB, r io.Reader) error {
 	done := make(chan struct{})
 	go func() {
 
-		apply(ctx, db, r)
+		err = apply(ctx, db, r)
 		if err != nil {
-			globalRollback(globaltx)
+			rollback(gtx)
 		}
 
 		close(done)
@@ -50,14 +50,14 @@ func UpWithDB(ctx context.Context, db *sql.DB, r io.Reader) error {
 
 	select {
 	case <-ctx.Done():
-		globalRollback(globaltx)
+		rollback(gtx)
 		return ctx.Err()
 	case <-done:
 		// migrations are done.
 
-		err := globaltx.Commit()
+		err := gtx.Commit()
 		if err != nil {
-			globalRollback(globaltx)
+			rollback(gtx)
 			return fmt.Errorf("failed to commit transaction! %w", err)
 		}
 	}
@@ -65,7 +65,8 @@ func UpWithDB(ctx context.Context, db *sql.DB, r io.Reader) error {
 	return nil
 }
 
-func globalRollback(tx *sql.Tx) {
+// rollback convience rollback the global transaction and print a message.
+func rollback(tx *sql.Tx) {
 	fmt.Printf("rolling back all changes!!")
 	err := tx.Rollback()
 	if err != nil {

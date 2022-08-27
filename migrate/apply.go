@@ -6,7 +6,7 @@ import (
 	"io"
 )
 
-// apply migrations
+// apply migrations.
 func apply(ctx context.Context, db *sql.DB, r io.Reader) error {
 
 	statements, err := StatmentsFrom(r)

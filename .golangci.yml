@@ -276,7 +276,8 @@ linters-settings:
 
   unused:
     # Select the Go version to target. The default is '1.13'.
-    go: '1.15'
+    go: '1.19'
+
 
   whitespace:
     multi-if: false   # Enforces newlines (or comments) after every multi-line if statement
@@ -314,7 +315,6 @@ linters:
   - ineffassign
   - dogsled
   - depguard
-  - unused
   - dupl
   - forcetypeassert
   - gci
@@ -323,7 +323,6 @@ linters:
   - noctx
   - prealloc
   - promlinter
-  - unused
   fast: false
 
 

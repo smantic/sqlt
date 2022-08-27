@@ -59,8 +59,8 @@ var (
 		EnvVars:     []string{},
 		TakesFile:   true,
 	}
-	timeoutFlag = &cli.IntFlag{
+	timeoutFlag = &cli.DurationFlag{
 		Name:  "timeout",
-		Usage: "set a timeout for the migration in ms, rolling back if exceeded.",
+		Usage: "provide a duration that the migration should run for before timeing out, rolling back all changes if exceeded.",
 	}
 )
