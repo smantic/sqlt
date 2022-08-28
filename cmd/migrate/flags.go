@@ -1,6 +1,10 @@
 package main
 
-import "github.com/urfave/cli/v2"
+import (
+	"time"
+
+	"github.com/urfave/cli/v2"
+)
 
 var (
 	dsnFlag = &cli.StringFlag{
@@ -61,6 +65,7 @@ var (
 	}
 	timeoutFlag = &cli.DurationFlag{
 		Name:  "timeout",
-		Usage: "provide a duration that the migration should run for before timeing out, rolling back all changes if exceeded.",
+		Usage: "provide a duration that the migration should run for before timeing out and rolling back.",
+		Value: time.Minute * 5,
 	}
 )

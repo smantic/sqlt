@@ -323,6 +323,7 @@ linters:
   - noctx
   - prealloc
   - promlinter
+  - contextcheck
   fast: false
 
 

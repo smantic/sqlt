@@ -9,12 +9,14 @@ import (
 	"github.com/urfave/cli/v2"
 )
 
-// Version is the most recent tag for the repo. Injected by the build.
-var Version string
+var (
+	// Version is the most recent tag for the repo. Injected by the build.
+	Version string
 
-var authors []*cli.Author = []*cli.Author{
-	&cli.Author{Name: "tyler beverley", Email: "tyler@smantic.dev"},
-}
+	authors []*cli.Author = []*cli.Author{
+		&cli.Author{Name: "tyler beverley", Email: "tyler@smantic.dev"},
+	}
+)
 
 func main() {
 

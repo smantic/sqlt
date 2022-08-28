@@ -2,7 +2,7 @@ package main
 
 import "github.com/urfave/cli/v2"
 
-var standardFlags = []cli.Flag{dsnFlag, driverFlag, sourceFlag, fileFlag}
+var standardFlags = []cli.Flag{dsnFlag, driverFlag, sourceFlag, fileFlag, timeoutFlag}
 
 var commands []*cli.Command = []*cli.Command{
 	&cli.Command{
